@@ -13,10 +13,21 @@ endif()
 # Add compile definitions for Windows
 add_definitions(-DWIN32_LEAN_AND_MEAN -DNOMINMAX)
 
+# Set Firebase SDK directory
+set(FIREBASE_CPP_SDK_DIR "$ENV{USERPROFILE}/Downloads/firebase_cpp_sdk_13.2.0/firebase_cpp_sdk")
+# Add Firebase libraries to the target using the function from the SDK.
+add_subdirectory(${FIREBASE_CPP_SDK_DIR} bin/ EXCLUDE_FROM_ALL)
+
+
 # Create executable
 add_executable(${PROJECT_NAME}
     src/main.cpp
 )
+
+# Add the Firebase SDKs for the products you want to use in your app
+set(firebase_libs firebase_auth firebase_firestore firebase_app)
+target_link_libraries(${PROJECT_NAME} "${firebase_libs}")
+
 
 # Set output directory
 set_target_properties(${PROJECT_NAME} PROPERTIES

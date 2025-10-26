@@ -2,6 +2,9 @@
     "cmake.configureOnOpen": true,
     "cmake.buildDirectory": "${workspaceFolder}/build",
     "cmake.generator": "MinGW Makefiles",
+    "cmake.configureArgs": [
+        "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
+    ],
     "cmake.preferredGenerators": [
         "MinGW Makefiles",
         "Ninja",
