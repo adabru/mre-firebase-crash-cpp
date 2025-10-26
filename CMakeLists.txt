@@ -1,42 +1,26 @@
 cmake_minimum_required(VERSION 3.20)
-project(cpp_cli_app)
+project(mre_firebase_crash_cpp)
 
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Set build type to Debug by default
-if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Debug)
-endif()
-
-# Add compile definitions for Windows
-add_definitions(-DWIN32_LEAN_AND_MEAN -DNOMINMAX)
 
 # Set Firebase SDK directory
 set(FIREBASE_CPP_SDK_DIR "$ENV{USERPROFILE}/Downloads/firebase_cpp_sdk_13.2.0/firebase_cpp_sdk")
-# Add Firebase libraries to the target using the function from the SDK.
-add_subdirectory(${FIREBASE_CPP_SDK_DIR} bin/ EXCLUDE_FROM_ALL)
 
+# Include Firebase headers
+include_directories("${FIREBASE_CPP_SDK_DIR}/include")
 
 # Create executable
 add_executable(${PROJECT_NAME}
     src/main.cpp
 )
 
-# Add the Firebase SDKs for the products you want to use in your app
-set(firebase_libs firebase_auth firebase_firestore firebase_app)
-target_link_libraries(${PROJECT_NAME} "${firebase_libs}")
-
-
-# Set output directory
-set_target_properties(${PROJECT_NAME} PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+# Set correct library path (for Windows 64-bit)
+set(FIREBASE_LIB_DIR "${FIREBASE_CPP_SDK_DIR}/libs/windows/VS2019/MT/x64/Release")
+# Link Firebase prebuilt libraries
+target_link_libraries(${PROJECT_NAME}
+    "${FIREBASE_LIB_DIR}/firebase_app.lib"
+    "${FIREBASE_LIB_DIR}/firebase_auth.lib"
+    "${FIREBASE_LIB_DIR}/firebase_firestore.lib"
 )
-
-# Enable console subsystem for Windows
-if(WIN32 AND MSVC)
-    set_target_properties(${PROJECT_NAME} PROPERTIES
-        LINK_FLAGS "/SUBSYSTEM:CONSOLE"
-    )
-endif()

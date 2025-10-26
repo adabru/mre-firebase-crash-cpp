@@ -1,34 +1,5 @@
 {
     "cmake.configureOnOpen": true,
     "cmake.buildDirectory": "${workspaceFolder}/build",
-    "cmake.generator": "MinGW Makefiles",
-    "cmake.configureArgs": [
-        "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
-    ],
-    "cmake.preferredGenerators": [
-        "MinGW Makefiles",
-        "Ninja",
-        "Unix Makefiles"
-    ],
-    "cmake.buildBeforeRun": true,
-    "cmake.debugConfig": {
-        "name": "Launch",
-        "type": "cppdbg",
-        "request": "launch",
-        "program": "${command:cmake.launchTargetPath}",
-        "args": [],
-        "stopAtEntry": false,
-        "cwd": "${command:cmake.launchTargetDirectory}",
-        "environment": [],
-        "console": "externalTerminal",
-        "MIMode": "gdb",
-        "miDebuggerPath": "gdb.exe",
-        "setupCommands": [
-            {
-                "description": "Enable pretty-printing for gdb",
-                "text": "-enable-pretty-printing",
-                "ignoreFailures": true
-            }
-        ]
-    }
+    "cmake.buildBeforeRun": true
 }
