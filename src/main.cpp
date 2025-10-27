@@ -37,7 +37,7 @@ int main()
     try
     {
         // Initialize Firebase App
-        cout << "\nInitializing Firebase..." << endl;
+        cout << "\nInitializing Firebase..." << flush;
 
         firebase::App *app = nullptr;
 
@@ -52,7 +52,7 @@ int main()
         // Create the Firebase App
         app = firebase::App::Create(options);
         assert(app != nullptr, "Failed to create Firebase app!");
-        cout << "Firebase app created successfully!" << endl;
+        cout << "success!" << endl;
 
         // Read credentials from file
         const string credentials_path = "credentials.txt";
@@ -63,7 +63,6 @@ int main()
         getline(credentials_file, password);
         credentials_file.close();
         assert(!email.empty() && !password.empty(), "Credentials file is empty or invalid!");
-        cout << "\nAttempting to sign in with:" << endl;
         cout << "Email: " << email << endl;
         cout << "Password: " << password << endl;
 
@@ -74,24 +73,27 @@ int main()
             auth->SignInWithEmailAndPassword(email.c_str(), password.c_str());
         cout << "Signing in..." << endl;
         await(sign_in_future);
-        cout << endl;
-
         assert(sign_in_future.status() == firebase::kFutureStatusComplete, "Sign-in operation did not complete successfully. Status: " + to_string(sign_in_future.status()));
         assert(sign_in_future.error() == firebase::auth::kAuthErrorNone, "Sign-in operation failed with error: " + string(sign_in_future.error_message()));
         firebase::auth::AuthResult result = *sign_in_future.result();
         firebase::auth::User user = result.user;
-        cout << "\nSuccessfully signed in!" << endl;
+        cout << "success!" << endl;
         cout << "User ID: " << user.uid() << endl;
         cout << "Email: " << user.email() << endl;
+
+        // Initialize Firestore
+        firebase::firestore::Firestore *firestore = firebase::firestore::Firestore::GetInstance(app);
+        assert(firestore != nullptr, "Failed to initialize Firestore!");
+        firebase::firestore::Settings settings;
+        settings.set_persistence_enabled(true);
+        firestore->set_settings(settings);
 
         cout << "\nPress Enter to retrieve document...";
         cin.get();
 
         // Retrieve document from Firestore
-        firebase::firestore::Firestore *firestore = firebase::firestore::Firestore::GetInstance(app);
-        assert(firestore != nullptr, "Failed to initialize Firestore!");
         firebase::firestore::DocumentReference doc_ref = firestore->Collection("User").Document(user.uid());
-        cout << "Retrieving document for user ID: " << user.uid() << endl;
+        cout << "Retrieving user document..." << flush;
         firebase::Future<firebase::firestore::DocumentSnapshot> get_future = doc_ref.Get();
         await(get_future);
         assert(get_future.status() == firebase::kFutureStatusComplete, "Document retrieval did not complete successfully. Status: " + to_string(get_future.status()));
@@ -99,7 +101,7 @@ int main()
         firebase::firestore::DocumentSnapshot doc_snapshot = *get_future.result();
         assert(doc_snapshot.exists(), "Document does not exist!");
 
-        cout << "\nDocument retrieved successfully!" << endl;
+        cout << "success!" << endl;
         cout << "User ID: " << doc_snapshot.id() << endl;
         cout << "Email: " << doc_snapshot.Get("email").string_value() << endl;
 
