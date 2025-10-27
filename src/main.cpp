@@ -102,8 +102,7 @@ int main()
         assert(doc_snapshot.exists(), "Document does not exist!");
 
         cout << "success!" << endl;
-        cout << "User ID: " << doc_snapshot.id() << endl;
-        cout << "Email: " << doc_snapshot.Get("email").string_value() << endl;
+        cout << "User Type: " << doc_snapshot.Get("UserType").string_value() << endl;
 
         // Clean up
         cout << "Cleaning up." << endl;
